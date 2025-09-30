@@ -11,18 +11,17 @@ const CURRENT_DIR = path.relative(
 
 const environment = AppSettings.get('ENVIRONMENT');
 
-// biome-ignore lint/style/noNonNullAssertion: ignore
-const url = AppSettings.get('DATABASE_URL')!;
-
 const config: Config = {
   dbCredentials: {
-    url,
-    ...(!AppSettings.isDev() && {
-      ssl: {
-        rejectUnauthorized: true,
-        ca: AppSettings.get('DATABASE_CA_CERT')
-      }
-    })
+    host: AppSettings.get('DATABASE_HOST')!,
+    port: Number(AppSettings.get('DATABASE_PORT')!),
+    user: AppSettings.get('DATABASE_USER')!,
+    password: AppSettings.get('DATABASE_PASSWORD')!,
+    database: AppSettings.get('DATABASE_NAME')!,
+    ssl: {
+      rejectUnauthorized: true,
+      ca: AppSettings.get('DATABASE_CA_CERT')
+    }
   },
   dialect: 'postgresql',
   migrations: {
