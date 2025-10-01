@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import type { Config } from 'drizzle-kit';
 import { defineConfig } from 'drizzle-kit';
 import { AppSettings } from '~/lib';
+import credentials from './credentials';
 
 const CURRENT_DIR = path.relative(
   process.cwd(),
@@ -11,17 +12,16 @@ const CURRENT_DIR = path.relative(
 
 const environment = AppSettings.get('ENVIRONMENT');
 
+const { database, host, password, port, ssl, user } = credentials();
+
 const config: Config = {
   dbCredentials: {
-    host: AppSettings.get('DATABASE_HOST')!,
-    port: Number(AppSettings.get('DATABASE_PORT')!),
-    user: AppSettings.get('DATABASE_USER')!,
-    password: AppSettings.get('DATABASE_PASSWORD')!,
-    database: AppSettings.get('DATABASE_NAME')!,
-    ssl: {
-      rejectUnauthorized: true,
-      ca: AppSettings.get('DATABASE_CA_CERT')
-    }
+    database,
+    host,
+    password,
+    port,
+    ssl,
+    user
   },
   dialect: 'postgresql',
   migrations: {

@@ -1,23 +1,22 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import type { PoolConfig } from 'pg';
 import { Pool } from 'pg';
-import { AppSettings } from '~/lib';
+import credentials from './credentials';
 import { logger } from './logger';
 import * as schema from './schemas';
 
+const { database, host, password, port, ssl, user } = credentials();
+
 const config: PoolConfig = {
-  host: AppSettings.get('DATABASE_HOST'),
-  port: Number(AppSettings.get('DATABASE_PORT')),
-  user: AppSettings.get('DATABASE_USER'),
-  password: AppSettings.get('DATABASE_PASSWORD'),
-  database: AppSettings.get('DATABASE_NAME'),
-  max: 20,
-  idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
-  ssl: {
-    rejectUnauthorized: true,
-    ca: AppSettings.get('DATABASE_CA_CERT')
-  }
+  database,
+  host,
+  idleTimeoutMillis: 30000,
+  password,
+  port,
+  ssl,
+  max: 20,
+  user
 };
 
 const pool = new Pool(config);
